@@ -7,7 +7,5 @@ local_settings.py
 .venv/
 .idea/
 /logs/
-/media/
-/static/
 *.sqlite
 *.sqlite3
