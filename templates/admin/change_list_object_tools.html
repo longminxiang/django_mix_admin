@@ -1,0 +1,54 @@
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+
+  {% comment %} Eric: 增加自定义工具 {% endcomment %}
+  {% for tool in custom_tools %}
+    <li><a id="{{ tool.id }}" href="{{ tool.href|default:"#" }}">{{ tool.title }}</a></li>
+    {% if tool.js %}
+    <script>
+      if (typeof $ == 'undefined') $ = django.jQuery;
+      {{ tool.js|safe }}
+    </script>
+    {% endif %}
+  {% endfor %}
+  {% comment %} Eric: 增加自定义工具 {% endcomment %}
+
+  {% comment %} Eric: custom action 3:自定义 action {% endcomment %}
+  {% if action_choices %}
+    <script>
+      function action_post(action) {
+        var form = document.getElementById("changelist-form");
+        var el = document.getElementById("changelist-form-action");
+        if (!el) {
+          el = document.createElement("input");
+          el.setAttribute("id", "changelist-form-action");
+          el.setAttribute("name", "action");
+          el.style.visibility="hidden";
+          form.appendChild(el);
+        }
+        el.setAttribute("value", action);
+        form.submit();
+        return false;
+      }
+    </script>
+
+    {% for action in action_choices %}
+      <li>
+        <a href="#" onclick="action_post('{{ action|first }}')">
+          {{ action|last }}
+        </a>
+      </li>
+    {% endfor %}
+  {% endif %}
+  {% comment %} Eric: custom action 3:自定义 action {% endcomment %}
+
+  {% if has_add_permission %}
+  <li>
+    {% url cl.opts|admin_urlname:'add' as add_url %}
+    <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink">
+      {% blocktrans with cl.opts.verbose_name as name %}增加{% endblocktrans %}
+    </a>
+  </li>
+  {% endif %}
+{% endblock %}

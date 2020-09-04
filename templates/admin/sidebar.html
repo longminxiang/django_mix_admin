@@ -1,0 +1,40 @@
+<div id=x-sidebar>
+    <ul class="x-sidebar-menu x-sidebar-menu-root">
+        {% for app in sidebar_apps %}
+            {% if app.has_module_perms %}
+            <li class="x-sidebar-item">
+                <a href="{% if app.models %}#{% else %}{{ app.app_url }}{% endif %}">{{ app.name }}
+                    {% if app.models %}
+                    <span class="x-sidebar-item-icon x-sidebar-item-icon-{% if app.app_url in request.path %}active{% else %}normal{% endif %}"></span>
+                    {% endif %}
+                </a>
+                {% if app.models %}
+                <ul class="x-sidebar-menu x-sidebar-menu-sub" {% if app.app_url not in request.path %}style="display:none;"{% endif %}>
+                {% for model in app.models %}
+                    {% if model.perms.view %}
+                    <li class="x-sidebar-subitem {% if model.admin_url in request.path %}x-sidebar-subitem-active{% endif %}">
+                        <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<script type="text/javascript">
+    $(".x-sidebar-item a").click(function () {
+        var icon = $(this).find(".x-sidebar-item-icon");
+        if (icon.hasClass("x-sidebar-item-icon-normal")) {
+            icon.removeClass("x-sidebar-item-icon-normal");
+            icon.addClass("x-sidebar-item-icon-active");
+        }
+        else {
+            icon.removeClass("x-sidebar-item-icon-active");
+            icon.addClass("x-sidebar-item-icon-normal");
+        }
+        $(this).parent().find(".x-sidebar-menu-sub").toggle();
+    });
+</script>

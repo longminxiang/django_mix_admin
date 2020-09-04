@@ -1,0 +1,23 @@
+{% comment %} {% load i18n %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+<ul>
+{% for choice in choices %}
+    <li{% if choice.selected %} class="selected"{% endif %}>
+    <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}">{{ choice.display }}</a></li>
+{% endfor %}
+</ul> {% endcomment %}
+<div class="custom-filter">
+<h3>{{ title }}</h3>
+{% if spec.autocomplete_field %}
+<div class="related-widget-wrapper">
+    {{ spec.autocomplete_field }}
+    <span class="small quiet" style="padding-left: 8px;"><a href="?{% if cl.is_popup %}_popup=1{% endif %}">全部</a></span>
+</div>
+{% else %}
+<select onchange="location.href=this.options[this.options.selectedIndex].value;">
+    {% for choice in choices %}
+    <option {% if choice.selected %}selected{% endif %} value="{{ choice.query_string|iriencode }}">{{ choice.display }}</option>
+    {% endfor %}
+</select>
+{% endif %}
+</div>
