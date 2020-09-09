@@ -1,12 +1,61 @@
+from django import forms
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.template.response import SimpleTemplateResponse
 from django.forms.widgets import Media
+from django.contrib import messages
+
+
+class FileImportHandler:
+
+    handlers = None
+    media = forms.Media(js=['admin/js/import_xls.js?v=2'])
+
+    def __init__(self):
+        if not self.handlers:
+            raise ValueError('handlers未设置')
+        self.tools = []
+        for handler in self.handlers:
+            js = '''
+            $('#{0}').click(function() {{
+                import_file('./', '{0}', '{2}');
+            }});
+            '''.format(*handler)
+            self.tools.append({'id': handler[0], 'title': handler[1], 'js': js})
+        super().__init__()
+
+    def _file_process(self, request, handler, f):
+        pass
+
+    def view(self, request):
+        if request.method != 'POST':
+            return
+
+        handler = request.POST.get('_import')
+        if handler in [f[0] for f in self.handlers]:
+            try:
+                f = request.FILES.get('file', None)
+                self._file_process(request, handler, f)
+                messages.add_message(request, messages.SUCCESS, '导入成功')
+            except Exception as e:
+                if isinstance(e, ValidationError):
+                    err_count = 5
+                    for err in e.error_list:
+                        messages.add_message(request, messages.ERROR, err.message)
+                        err_count -= 1
+                        if err_count <= 0:
+                            break
+                else:
+                    msg = getattr(e, 'message', '文件不存在或格式不正确')
+                    messages.add_message(request, messages.ERROR, msg)
 
 
 class ModelAdmin(admin.ModelAdmin):
 
     search_placeholder = {}
+
+    import_handler = None
 
     def get_search_placeholder(self, request):
         return self.search_placeholder
@@ -31,11 +80,18 @@ class ModelAdmin(admin.ModelAdmin):
     def changelist_view_extra_context(self, request, extra_context=None):
         extra_context = extra_context or {}
         action_choices = self.get_action_choices(request)
-        action_choices = [(a, n if a != "delete_selected" else "删除所选") for (a, n) in action_choices if a != ""]
+        action_choices = [(a, n if a != "delete_selected" else "批量删除") for (a, n) in action_choices if a != ""]
         extra_context['action_choices'] = action_choices
         return extra_context
 
     def changelist_view(self, request, extra_context=None):
+
+        if self.import_handler is not None:
+            extra_context = extra_context or {}
+            custom_tools = extra_context.get('custom_tools', [])
+            custom_tools.extend(self.import_handler.tools)
+            extra_context['custom_tools'] = custom_tools
+            self.import_handler.view(request)
 
         # 让action不用有选择数据也可以执行
         action = request.POST.get('action')
@@ -54,6 +110,13 @@ class ModelAdmin(admin.ModelAdmin):
         extra_context = self.changelist_view_extra_context(request, extra_context)
         view = super().changelist_view(request, extra_context=extra_context)
         return view
+
+    @property
+    def media(self):
+        media = super().media
+        if self.import_handler is not None:
+            media += self.import_handler.media
+        return media
 
 
 def _resolve_context(self, context):
