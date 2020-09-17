@@ -10,7 +10,7 @@ from django.contrib import messages
 class FileImportHandler:
 
     handlers = None
-    media = forms.Media(js=['admin/js/import_xls.js?v=2'])
+    media = forms.Media(js=['admin/js/import_xls.js'])
 
     def __init__(self):
         if not self.handlers:
@@ -110,6 +110,14 @@ class ModelAdmin(admin.ModelAdmin):
         extra_context = self.changelist_view_extra_context(request, extra_context)
         view = super().changelist_view(request, extra_context=extra_context)
         return view
+
+    def response_action(self, request, queryset):
+        response = None
+        try:
+            response = super().response_action(request, queryset)
+        except ValidationError as e:
+            self.message_user(request, e.message, messages.ERROR)
+        return response
 
     @property
     def media(self):
