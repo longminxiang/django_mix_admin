@@ -93,20 +93,48 @@ div.form-row {
 
 /* 侧栏 */
 
+#x-header {
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+}
+
 #x-container {
+    position: fixed;
     padding-top:53px;
-    margin-left:220px;
-    width: calc(100% - 220px);
+    height: calc(100% - 53px);
+    width: 100%;
+}
+
+#x-flex-container {
+    display: flex;
+    height: 100%;
+}
+
+#x-content {
+    flex-grow: 2;
+    overflow-y: scroll;
 }
 
 #x-sidebar {
-    position: fixed;
-    float: left;
     width: 220px;
-    height: calc(100% - 53px);
-    top: 53px;
     background: #222d32;
     overflow-y: scroll;
+}
+
+@media (max-width: 1024px) {
+    #x-header {
+        position: relative;
+    }
+
+    #x-container {
+        padding-top:0;
+    }
+
+    #x-sidebar {
+        display: none;
+    }
+
 }
 
 .x-sidebar-menu {
@@ -162,21 +190,4 @@ div.form-row {
 
 .x-sidebar-subitem-active {
     background: #417690;
-}
-
-@media (max-width: 1024px) {
-    #header {
-        position: relative;
-        z-index: 999;
-    }
-
-    #x-sidebar {
-        display: none;
-    }
-
-    #x-container {
-        padding-top:0;
-        margin-left:0;
-        width: 100%;
-    }
 }

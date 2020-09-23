@@ -1,6 +1,6 @@
 <div id=x-sidebar>
     <ul class="x-sidebar-menu x-sidebar-menu-root">
-        {% for app in sidebar_apps %}
+        {% for app in available_apps %}
             {% if app.has_module_perms %}
             <li class="x-sidebar-item">
                 <a href="{% if app.models %}#{% else %}{{ app.app_url }}{% endif %}">{{ app.name }}
@@ -11,8 +11,8 @@
                 {% if app.models %}
                 <ul class="x-sidebar-menu x-sidebar-menu-sub" {% if app.app_url not in request.path %}style="display:none;"{% endif %}>
                 {% for model in app.models %}
-                    {% if model.perms.view %}
-                    <li class="x-sidebar-subitem {% if model.admin_url in request.path %}x-sidebar-subitem-active{% endif %}">
+                    {% if model.perms.view or model.view_only %}
+                    <li class="x-sidebar-subitem {% if model.active %}x-sidebar-subitem-active{% endif %}">
                         <a href="{{ model.admin_url }}">{{ model.name }}</a>
                     </li>
                     {% endif %}
