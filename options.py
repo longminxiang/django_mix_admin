@@ -5,6 +5,7 @@ from django.conf import settings
 from django.template.response import SimpleTemplateResponse
 from django.forms.widgets import Media
 from django.contrib import messages
+from django.urls import reverse
 
 
 class FileImportHandler:
@@ -74,7 +75,6 @@ class ModelAdmin(admin.ModelAdmin):
     def get_changelist_instance(self, request):
         cl = super().get_changelist_instance(request)
         cl.search_placeholder = self._get_search_placeholder(request)
-
         return cl
 
     def changelist_view_extra_context(self, request, extra_context=None):
@@ -85,7 +85,6 @@ class ModelAdmin(admin.ModelAdmin):
         return extra_context
 
     def changelist_view(self, request, extra_context=None):
-
         if self.import_handler is not None:
             extra_context = extra_context or {}
             custom_tools = extra_context.get('custom_tools', [])
@@ -118,6 +117,13 @@ class ModelAdmin(admin.ModelAdmin):
         except ValidationError as e:
             self.message_user(request, e.message, messages.ERROR)
         return response
+
+    def is_changelist_request(self, request):
+        '''
+        判断是否是列表
+        '''
+        changelist_url = 'admin:%s_%s_changelist' % (self.opts.app_label, self.opts.model_name)
+        return request.path == reverse(changelist_url)
 
     @property
     def media(self):
