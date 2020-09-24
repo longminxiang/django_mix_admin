@@ -52,7 +52,28 @@ class FileImportHandler:
                     messages.add_message(request, messages.ERROR, msg)
 
 
-class ModelAdmin(admin.ModelAdmin):
+class ModelAdminProxy:
+
+    def is_changelist_request(self, request):
+        '''
+        判断是否是列表
+        '''
+        url = 'admin:%s_%s_changelist' % (self.opts.app_label, self.opts.model_name)
+        return request.path == reverse(url)
+
+    def is_autocomplete_request(self, request):
+        '''
+        判断是否是autocomplete列表
+        '''
+        url = 'admin:%s_%s_autocomplete' % (self.opts.app_label, self.opts.model_name)
+        return request.path == reverse(url)
+
+    def is_change_request(self, request):
+        return '/{}/{}/'.format(self.opts.app_label, self.opts.model_name) in request.path \
+            and '/change/' in request.path
+
+
+class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
 
     search_placeholder = {}
 
@@ -117,13 +138,6 @@ class ModelAdmin(admin.ModelAdmin):
         except ValidationError as e:
             self.message_user(request, e.message, messages.ERROR)
         return response
-
-    def is_changelist_request(self, request):
-        '''
-        判断是否是列表
-        '''
-        changelist_url = 'admin:%s_%s_changelist' % (self.opts.app_label, self.opts.model_name)
-        return request.path == reverse(changelist_url)
 
     @property
     def media(self):
