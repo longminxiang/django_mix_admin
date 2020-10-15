@@ -6,6 +6,8 @@ from django.template.response import SimpleTemplateResponse
 from django.forms.widgets import Media
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
+from django.http import HttpResponseRedirect
 
 
 class FileImportHandler:
@@ -38,7 +40,6 @@ class FileImportHandler:
             try:
                 f = request.FILES.get('file', None)
                 self._file_process(request, handler, f)
-                messages.add_message(request, messages.SUCCESS, '导入成功')
             except Exception as e:
                 if isinstance(e, ValidationError):
                     err_count = 5
@@ -76,6 +77,12 @@ class ModelAdminProxy:
 class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
 
     search_placeholder = {}
+
+    # 自定义详情按钮
+    # 格式：(NAME, {'display': BTN_NAME, 'action': ACTION_FUNC}),
+    custom_form_buttons = ()
+    # 隐藏原生按钮
+    hide_original_form_buttons = False
 
     import_handler = None
 
@@ -130,6 +137,30 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         extra_context = self.changelist_view_extra_context(request, extra_context)
         view = super().changelist_view(request, extra_context=extra_context)
         return view
+
+    def _changeform_view(self, request, object_id, form_url, extra_context):
+        # 自定义详情按钮
+        if bool(self.custom_form_buttons) and bool(object_id):
+            extra_context = extra_context or {}
+            extra_context['custom_form_buttons'] = self.custom_form_buttons
+        # 隐藏原生按钮
+        if self.hide_original_form_buttons:
+            extra_context = extra_context or {}
+            extra_context['hide_original_form_buttons'] = self.hide_original_form_buttons
+
+        if request.method == 'POST':
+            for name, btn in self.custom_form_buttons:
+                if name not in request.POST:
+                    continue
+                qs = self.model.objects.filter(pk=object_id)
+                btn.get('action')(self, request, qs)
+                opts = self.model._meta
+                preserved_filters = self.get_preserved_filters(request)
+                redirect_url = add_preserved_filters(
+                    {'preserved_filters': preserved_filters, 'opts': opts}, request.path)
+                return HttpResponseRedirect(redirect_url)
+
+        return super()._changeform_view(request, object_id, form_url, extra_context)
 
     def response_action(self, request, queryset):
         response = None
