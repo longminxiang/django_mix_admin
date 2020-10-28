@@ -120,6 +120,7 @@ div.form-row {
     width: 220px;
     background: #222d32;
     overflow-y: scroll;
+    flex-shrink: 0;
 }
 
 @media (max-width: 1024px) {
