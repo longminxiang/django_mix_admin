@@ -78,7 +78,11 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
     # 隐藏原生按钮
     hide_original_form_buttons = False
 
+    # 导入
     import_handler = None
+
+    # 预览图片
+    enable_preview_image = True
 
     def get_search_placeholder(self, request):
         return self.search_placeholder
@@ -151,11 +155,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     continue
                 qs = self.model.objects.filter(pk=object_id)
                 btn.get('action')(self, request, qs)
-                opts = self.model._meta
-                preserved_filters = self.get_preserved_filters(request)
-                redirect_url = add_preserved_filters(
-                    {'preserved_filters': preserved_filters, 'opts': opts}, request.path)
-                return HttpResponseRedirect(redirect_url)
+                return HttpResponseRedirect(request.path)
 
         return super()._changeform_view(request, object_id, form_url, extra_context)
 
@@ -172,6 +172,10 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         media = super().media
         if self.import_handler is not None:
             media += self.import_handler.media
+        if self.enable_preview_image:
+            media += forms.Media(
+                js=['popup/jquery.magnific-popup.min.js', 'admin/js/preview_img.js'],
+                css={'': ['popup/magnific-popup.css']})
         return media
 
 
