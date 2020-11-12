@@ -32,23 +32,17 @@ class FileImportHandler:
         pass
 
     def view(self, request):
-        if request.method != 'POST':
-            return
-
         handler = request.POST.get('_import')
         if handler in [f[0] for f in self.handlers]:
             try:
                 f = request.FILES.get('file', None)
-                self._file_process(request, handler, f)
+                return self._file_process(request, handler, f)
             except Exception as e:
                 if isinstance(e, ValidationError):
-                    err_count = 5
                     for err in e.error_list:
                         messages.add_message(request, messages.ERROR, err.message)
-                        err_count -= 1
-                        if err_count <= 0:
-                            break
                 else:
+                    print(e)
                     msg = getattr(e, 'message', '文件不存在或格式不正确')
                     messages.add_message(request, messages.ERROR, msg)
 
@@ -118,7 +112,10 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             custom_tools = extra_context.get('custom_tools', [])
             custom_tools.extend(self.import_handler.tools)
             extra_context['custom_tools'] = custom_tools
-            self.import_handler.view(request)
+            if request.method == 'POST':
+                response = self.import_handler.view(request)
+                if response:
+                    return response
 
         # 让action不用有选择数据也可以执行
         action = request.POST.get('action')
