@@ -6,7 +6,6 @@ from django.template.response import SimpleTemplateResponse
 from django.forms.widgets import Media
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 from django.http import HttpResponseRedirect
 
 
