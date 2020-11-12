@@ -58,6 +58,7 @@
           {% comment %} <div id="changelist-filter"> {% endcomment %}
             {% comment %} <h2>{% trans 'Filter' %}</h2> {% endcomment %}
             {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+            <a href="{{ request.path }}"><input type="submit" class="submit-btn" value="全部" style="height: 28px; padding:0 16px; margin-right: 20px;"></input></a>
         {% endif %}
       {% endblock %}
       {% block search %}{% search_form cl %}{% endblock %}
