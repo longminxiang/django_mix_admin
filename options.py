@@ -123,13 +123,13 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         # 让action不用有选择数据也可以执行
         action = request.POST.get('action')
         if request.method == "POST" and action:
-            no_post = False
+            without_queryset = False
             try:
                 act_func = self.get_actions(request).get(action)[0]
-                no_post = getattr(act_func, 'no_post', False)
+                without_queryset = getattr(act_func, 'without_queryset', False)
             except Exception:
                 pass
-            if no_post:
+            if without_queryset:
                 request.POST._mutable = True
                 request.POST['_selected_action'] = '1'
 
