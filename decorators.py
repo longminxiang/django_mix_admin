@@ -12,3 +12,15 @@ def action_description(desc, without_queryset=False):
         return func
 
     return decorator
+
+
+def short_description(desc):
+    '''
+    short description装饰器
+    \n@param desc 描述
+    '''
+    def decorator(func):
+        func.short_description = desc
+        return func
+
+    return decorator
