@@ -1,6 +1,6 @@
 
 
-def action_description(desc, without_queryset=False):
+def action_description(desc, without_queryset=False, confirm=False, confirm_message=None):
     '''
     action description装饰器
     \n@param desc 描述
@@ -9,6 +9,18 @@ def action_description(desc, without_queryset=False):
     def decorator(func):
         func.short_description = desc
         func.without_queryset = without_queryset
+        func.options = {'without_queryset': without_queryset, 'confirm': confirm, 'confirm_message': confirm_message}
+        return func
+
+    return decorator
+
+
+def import_file_action(desc, accept=None):
+
+    def decorator(func):
+        func.short_description = desc
+        func.without_queryset = True
+        func.options = {'import_file': True, 'accept': accept, 'without_queryset': True}
         return func
 
     return decorator

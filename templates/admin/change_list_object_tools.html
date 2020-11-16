@@ -1,44 +1,93 @@
 {% load i18n admin_urls %}
+{% load mix_admin %}
 
 {% block object-tools-items %}
 
-  {% comment %} Eric: 增加自定义工具 {% endcomment %}
-  {% for tool in custom_tools %}
-    <li><a id="{{ tool.id }}" href="{{ tool.href|default:"#" }}">{{ tool.title }}</a></li>
-    {% if tool.js %}
-    <script>
-      if (typeof $ == 'undefined') $ = django.jQuery;
-      {{ tool.js|safe }}
-    </script>
-    {% endif %}
-  {% endfor %}
-  {% comment %} Eric: 增加自定义工具 {% endcomment %}
-
   {% comment %} Eric: custom action 3:自定义 action {% endcomment %}
-  {% if action_choices %}
+  {% if action_form.fields.action.choices and is_mix %}
     <script>
-      function action_post(action) {
-        var form = document.getElementById("changelist-form");
-        var el = document.getElementById("changelist-form-action");
-        if (!el) {
-          el = document.createElement("input");
-          el.setAttribute("id", "changelist-form-action");
-          el.setAttribute("name", "action");
-          el.style.visibility="hidden";
-          form.appendChild(el);
+      function _getOrCreateInput(form, id, name, progress) {
+        var input = document.getElementById(id);
+        if (!input) {
+          input = document.createElement("input");
+          input.setAttribute("id", id);
+          input.setAttribute("name", name);
+          input.style.visibility="hidden";
+          if (typeof progress == "function") progress(input);
+          form.appendChild(input);
         }
-        el.setAttribute("value", action);
-        form.submit();
+        return input
+      }
+
+      function _perform_action(action, options) {
+        var form = document.getElementById("changelist-form");
+
+        var actionInput = _getOrCreateInput(form, "changelist-form-action", "action");
+        actionInput.setAttribute("value", action);
+
+        var indexInput = _getOrCreateInput(form, "changelist-form-index", "index");
+        indexInput.setAttribute("value", 1);
+
+        if (options.without_queryset) {
+          var selectedActionInput = _getOrCreateInput(form, "changelist-form-selected-action", "_selected_action");
+          selectedActionInput.setAttribute("value", 1);
+        }
+        else {
+          var selectedActionInput = document.getElementById("changelist-form-selected-action");
+          if (selectedActionInput) form.removeChild(selectedActionInput);
+        }
+
+        if (options.import_file) {
+          var fileInput = _getOrCreateInput(form, "changelist-form-file", "file", function(input) {
+            input.type = "file";
+            form.enctype = "multipart/form-data";
+            $(input).change(function () {
+              form.submit();
+            });
+          });
+          if (options.accept) fileInput.accept = options.accept;
+          fileInput.click();
+        }
+        else {
+          var fileInput = document.getElementById("changelist-form-file");
+          if (fileInput) form.removeChild(fileInput);
+          form.removeAttribute("enctype");
+          form.submit();
+        }
+      };
+      function action_post(action, options) {
+        if (options.confirm) {
+          swal.fire({
+            title: "提示", text: options.confirm_message || "确认执行",
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            showCancelButton: true
+          })
+          .then(function(t) {
+            if (t.isConfirmed) {
+              _perform_action(action, options);
+            }
+          });
+        }
+        else {
+          _perform_action(action, options);
+        }
         return false;
       }
     </script>
 
-    {% for action in action_choices %}
+    {% for action in action_form.fields.action.choices %}
+      {% with action_name=action|first %}
+      {% if action_name != '' %}
+      {% with options=action_options|get_item:action_name %}
       <li>
-        <a href="#" onclick="action_post('{{ action|first }}')">
-          {{ action|last }}
+        <a href="#" onclick="action_post('{{ action_name }}', {{ options|json_str }})">
+          {% if action_name == 'delete_selected' %}批量删除{% else %}{{ action|last }}{% endif %}
         </a>
       </li>
+      {% endwith %}
+      {% endif %}
+      {% endwith %}
     {% endfor %}
   {% endif %}
   {% comment %} Eric: custom action 3:自定义 action {% endcomment %}
