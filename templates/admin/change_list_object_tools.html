@@ -56,6 +56,7 @@
         }
       };
       function action_post(action, options) {
+        options = options || {};
         if (options.confirm) {
           swal.fire({
             title: "提示", text: options.confirm_message || "确认执行",
@@ -81,7 +82,7 @@
       {% if action_name != '' %}
       {% with options=action_options|get_item:action_name %}
       <li>
-        <a href="#" onclick="action_post('{{ action_name }}', {{ options|json_str }})">
+        <a href="javascript:void(0)" onclick="action_post('{{ action_name }}', {{ options|json_str }})">
           {% if action_name == 'delete_selected' %}批量删除{% else %}{{ action|last }}{% endif %}
         </a>
       </li>
