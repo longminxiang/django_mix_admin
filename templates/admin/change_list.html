@@ -46,22 +46,34 @@
         </p>
         {{ cl.formset.non_form_errors }}
     {% endif %}
+
     {% comment %} Eric: 自定义filter样式1 {% endcomment %}
     {% comment %} <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist"> {% endcomment %}
     <div class="module" id="changelist">
+    {% comment %} Eric: 自定义filter样式1 End {% endcomment %}
+
       {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
 
       <div id="custom-changelist-filter">
       {% block filters %}
         {% if cl.has_filters %}
+
           {% comment %} Eric: 自定义filter样式2 {% endcomment %}
           {% comment %} <div id="changelist-filter"> {% endcomment %}
             {% comment %} <h2>{% trans 'Filter' %}</h2> {% endcomment %}
+          {% comment %} Eric: 自定义filter样式2 End {% endcomment %}
+
             {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
-            <a href="{{ request.path }}"><input type="submit" class="submit-btn" value="全部" style="height: 28px; padding:0 16px; margin-right: 20px;"></input></a>
         {% endif %}
       {% endblock %}
       {% block search %}{% search_form cl %}{% endblock %}
+
+      {% comment %} Eric: 增加全部按钮 {% endcomment %}
+      {% if cl.has_filters or cl.search_fields %}
+      <a href="{{ request.path }}"><input type="submit" class="submit-btn" value="全部" style="height: 28px; padding:0 16px;"></input></a>
+      {% endif %}
+      {% comment %} Eric: 增加全部按钮 End {% endcomment %}
+
       </div>
 
       <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
@@ -90,6 +102,6 @@
     <script>
       document.getElementById("content").style.paddingTop = '0';
     </script>
-    {% comment %} Eric: 修复一下content padding-top {% endcomment %}
+    {% comment %} Eric: 修复一下content padding-top End {% endcomment %}
   </div>
 {% endblock %}
