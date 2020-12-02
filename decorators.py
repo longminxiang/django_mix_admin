@@ -20,7 +20,10 @@ def import_file_action(desc, accept=None):
     def decorator(func):
         func.short_description = desc
         func.without_queryset = True
-        func.options = {'import_file': True, 'accept': accept, 'without_queryset': True}
+        t_accept = accept
+        if t_accept and t_accept == 'xls':
+            t_accept = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        func.options = {'import_file': True, 'accept': t_accept, 'without_queryset': True}
         return func
 
     return decorator
