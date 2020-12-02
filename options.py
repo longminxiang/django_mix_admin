@@ -1,3 +1,4 @@
+import traceback
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -108,6 +109,10 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         except ValidationError as e:
             for err in e.error_list:
                 self.message_user(request, err.message, messages.ERROR)
+        except Exception as e:
+            print(traceback.format_exc(-3))
+            msg = e.message if hasattr(e, 'message') else '请稍后再试'
+            self.message_user(request, msg, messages.ERROR)
         return response
 
     @property
