@@ -66,12 +66,10 @@ def add_extra_app(func):
 
 
 def add_extra_url(url, name=None):
-    inner_url = url
-    inner_name = name
 
     def wrapper(func):
-        url = path(inner_url, func, name=inner_name)
-        AdminSite.extra_urls.append(url)
+        xurl = path(url, func, name=name)
+        AdminSite.extra_urls.append(xurl)
         return func
 
     return wrapper
