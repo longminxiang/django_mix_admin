@@ -120,7 +120,11 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         media = super().media
         if self.enable_preview_image:
             media += forms.Media(
-                js=['popup/jquery.magnific-popup.min.js', 'admin/js/preview_img.js'],
+                js=[
+                    'popup/jquery.magnific-popup.min.js',
+                    'admin/js/preview_img.js',
+                    'admin/js/custom_action.js'
+                ],
                 css={'': ['popup/magnific-popup.css']})
         return media
 

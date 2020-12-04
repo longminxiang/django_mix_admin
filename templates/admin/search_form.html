@@ -1,10 +1,30 @@
 {% load i18n static %}
 {% if cl.search_fields %}
+{% comment %} Eric: 去掉id, 统一样式 {% endcomment %}
+{% comment %}<div id="toolbar"><form id="changelist-search" method="get">{% endcomment %}
 <div><form id="changelist-search" method="get">
+{% comment %} Eric: 去掉id, 统一样式 end {% endcomment %}
+
 <div><!-- DIV needed for valid HTML -->
-{% comment %} <label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></label> {% endcomment %}
-<input type="text" size="40" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar">
+
+{% comment %}
+Eric: 不要图标了
+{% comment %}
+<label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></label>
+{% endcomment %}
+<input type="text" size="40" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" autofocus>
+
+{% comment %} Eric: 按钮样式变一下 {% endcomment %}
+{% comment %}<input type="submit" value="{% trans 'Search' %}">{% endcomment %}
 <input type="submit" class="submit-btn" value="{% trans 'Search' %}">
+{% comment %} Eric: 按键样式变一下 end {% endcomment %}
+
+{% comment %}
+Eric: 数量也不要了
+{% if show_result_count %}
+    <span class="small quiet">{% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %} (<a href="?{% if cl.is_popup %}_popup=1{% endif %}">{% if cl.show_full_result_count %}{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}{% else %}{% trans "Show all" %}{% endif %}</a>)</span>
+{% endif %}
+{% endcomment %}
 
 {% for pair in cl.params.items %}
     {% if pair.0 != search_var %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}">{% endif %}

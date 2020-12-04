@@ -1,10 +1,16 @@
 {% load i18n admin_urls %}
 <div class="submit-row">
 {% block submit-row %}
+{% comment %} Eric: 自定义按钮 {% endcomment %}
 {% for name, btn in custom_form_buttons %}
 <input type="submit" value="{{ btn.display }}" class="deletelink" name="{{ name }}">
 {% endfor %}
+{% comment %} Eric: 自定义按钮 end {% endcomment %}
+
+{% comment %} Eric: 是否隐藏原生按钮1 {% endcomment %}
 {% if not hide_original_form_buttons %}
+{% comment %} Eric: 是否隐藏原生按钮1 end {% endcomment %}
+
 {% if show_save %}<input type="submit" value="{% trans 'Save' %}" class="default" name="_save">{% endif %}
 {% if show_delete_link and original %}
     {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
@@ -14,6 +20,10 @@
 {% if show_save_and_add_another %}<input type="submit" value="{% trans 'Save and add another' %}" name="_addanother">{% endif %}
 {% if show_save_and_continue %}<input type="submit" value="{% if can_change %}{% trans 'Save and continue editing' %}{% else %}{% trans 'Save and view' %}{% endif %}" name="_continue">{% endif %}
 {% if show_close %}<a href="{% url opts|admin_urlname:'changelist' %}" class="closelink">{% trans 'Close' %}</a>{% endif %}
+
+{% comment %} Eric: 是否隐藏原生按钮2 {% endcomment %}
 {% endif %}
+{% comment %} Eric: 是否隐藏原生按钮3 end {% endcomment %}
+
 {% endblock %}
 </div>

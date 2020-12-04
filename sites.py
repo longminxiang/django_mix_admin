@@ -31,7 +31,7 @@ class AdminSite(admin.AdminSite):
             # sidebar的active状态
             for model in app.get('models'):
                 url = model.get('admin_url', '').split('?')[0]
-                if url in request.path:
+                if url == request.path:
                     model['active'] = True
         return app_list
 

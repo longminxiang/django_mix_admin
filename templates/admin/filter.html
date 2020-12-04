@@ -1,11 +1,14 @@
-{% comment %} {% load i18n %}
+{% comment %} Eric: 完全自定义filter {% endcomment %}
+{% comment %}
+{% load i18n %}
 <h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
 <ul>
 {% for choice in choices %}
     <li{% if choice.selected %} class="selected"{% endif %}>
     <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}">{{ choice.display }}</a></li>
 {% endfor %}
-</ul> {% endcomment %}
+</ul>
+{% endcomment %}
 <div class="custom-filter">
 <h3>{{ title }}</h3>
 {% if spec.autocomplete_field %}

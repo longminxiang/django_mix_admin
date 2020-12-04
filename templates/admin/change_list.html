@@ -59,8 +59,10 @@
         {% if cl.has_filters %}
 
           {% comment %} Eric: 自定义filter样式2 {% endcomment %}
-          {% comment %} <div id="changelist-filter"> {% endcomment %}
-            {% comment %} <h2>{% trans 'Filter' %}</h2> {% endcomment %}
+          {% comment %}
+          <div id="changelist-filter">
+            <h2>{% trans 'Filter' %}</h2>
+          {% endcomment %}
           {% comment %} Eric: 自定义filter样式2 End {% endcomment %}
 
             {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}

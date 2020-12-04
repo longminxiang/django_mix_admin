@@ -19,10 +19,6 @@
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
 <script type="text/javascript" src="{% static 'sweetalert/sweetalert2@10.min.js' %}"></script>
-<script>
-    window.$ = django.jQuery;
-    window.jQuery = django.jQuery;
-</script>
 {% comment %} Eric: 注入自定义css, jq每个页面都需要 end {% endcomment %}
 
 {% block extrahead %}{% endblock %}
@@ -140,5 +136,8 @@
 
 </div>
 <!-- END Container -->
+{% if has_sidebar %}
+<script type="text/javascript" src="{% static 'admin/js/sidebar.js' %}"></script>
+{% endif %}
 </body>
 </html>
