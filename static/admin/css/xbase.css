@@ -90,12 +90,6 @@ div.form-row {
     }
 }
 
-/* @media (max-width: 1024px) {
-    #changelist-search .quiet {
-        margin: 5px 0 0 0;
-    }
-} */
-
 /* 侧栏 */
 
 #x-header {
@@ -104,28 +98,17 @@ div.form-row {
     width: 100%;
 }
 
-#x-container {
-    position: fixed;
-    padding-top:53px;
-    height: calc(100% - 53px);
-    width: 100%;
-}
-
-#x-flex-container {
-    display: flex;
-    height: 100%;
-}
-
-#x-content {
-    flex-grow: 2;
-    overflow-y: scroll;
-}
-
 #x-sidebar {
+    position: fixed;
+    height: 100%;
     width: 220px;
     background: #222d32;
     overflow-y: scroll;
-    flex-shrink: 0;
+}
+
+#x-content {
+    overflow-y: scroll;
+    margin-left: 220px;
 }
 
 @media (max-width: 1024px) {
@@ -133,14 +116,17 @@ div.form-row {
         position: relative;
     }
 
-    #x-container {
-        padding-top:0;
+    .x-header-fixed {
+        display: none;
     }
 
     #x-sidebar {
         display: none;
     }
 
+    #x-content {
+        margin-left: 0;
+    }
 }
 
 .x-sidebar-menu {

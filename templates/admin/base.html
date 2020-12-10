@@ -82,10 +82,9 @@
 {% comment %} Eric: 增加侧边栏2 {% endcomment %}
 {% if has_sidebar %}
 </div>
-<div id="x-container">
-    <div id="x-flex-container">
-        {% include "admin/sidebar.html" %}
-        <div id="x-content">
+<div class="x-header-fixed"></div>
+{% include "admin/sidebar.html" %}
+<div id="x-content">
 {% endif %}
 {% comment %} Eric: 增加侧边栏2 end {% endcomment %}
 
@@ -127,8 +126,6 @@
 {% comment %} Eric: 增加侧边栏3 {% endcomment %}
 {% if has_sidebar %}
 {% if not is_popup %}
-        </div>
-    </div>
 </div>
 {% endif %}
 {% endif %}
@@ -137,7 +134,7 @@
 </div>
 <!-- END Container -->
 {% if has_sidebar %}
-<script type="text/javascript" src="{% static 'admin/js/sidebar.js' %}"></script>
+<script type="text/javascript" src="{% static 'admin/js/sidebar.js' %}?v=1"></script>
 {% endif %}
 </body>
 </html>
