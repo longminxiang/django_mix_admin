@@ -12,7 +12,6 @@
             }
             $(this).parent().find(".x-sidebar-menu-sub").toggle();
         });
-
-        $(".x-header-fixed").height($("#x-header").height() + "px");
     });
+    $(".x-header-fixed").height($("#x-header").height() + "px");
 })(django.jQuery)
