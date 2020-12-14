@@ -1,0 +1,115 @@
+<div id="{{ widget.attrs.id }}-uploader" style="display:block; float:left; max-width: 800px;">
+  <vue-file-agent
+    ref="{{ widget.attrs.id }}_file_agent"
+    :multiple="true"
+    {% if widget.attrs.disabled %}:disabled="{{ widget.attrs.disabled }}"{% endif %}
+    :deletable="true"
+    :sortable="'handle'"
+    :meta="false"
+    {% if widget.attrs.accept %}:accept="'{{ widget.attrs.accept }}'"{% endif %}
+    {% if widget.attrs.max_size %}:max-size="'{{ widget.attrs.max_size }}'"{% endif %}
+    :max-files="{{ widget.attrs.max_files|default:9 }}"
+    :help-text="'{{ widget.attrs.help_text|default:'点击上传' }}'"
+    {% if widget.attrs.error_text %}:error-text="{{ widget.attrs.error_text }}"{% endif %}
+    @select="filesSelected($event)"
+    @beforedelete="onBeforeDelete($event)"
+    @upload="onUpload($event)"
+    v-model="fileRecords"
+  />
+</div>
+<input style="display:none;" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}/>
+<script>
+if (window.VueSlicksort) {
+    Vue.component('vfa-sortable-list', window.VueSlicksort.SlickList);
+    Vue.component('vfa-sortable-item', window.VueSlicksort.SlickItem);
+}
+var {{ widget.attrs.id }}_vue = new Vue({
+    el: '#{{ widget.attrs.id }}-uploader',
+    data: function () {
+      return {
+        fileRecords: {% if widget.value and widget.value != 'null' %}{{ widget.value|safe }}.files{% else %}[]{% endif %},
+        uploading: false,
+        uploading_error: false,
+      };
+    },
+    methods: {
+      filesSelected: function (fileRecordsNewlySelected) {
+        var fileRecords = fileRecordsNewlySelected.filter(function(record) {
+          return !record.error ? record : undefined;
+        });
+
+        {% if widget.attrs.presigned_upload_url %}
+
+        for (var i=0; i < fileRecords.length; i++) {
+          var record = fileRecords[i];
+
+          django.jQuery.get('{{ widget.attrs.presigned_upload_url.url }}?name=' + record.file.name + '{{ widget.attrs.presigned_upload_url.extra|safe }}' , function(res) {
+            if (res.code == 1) {
+              var record = fileRecords.filter(function(r) { return r.file.name == res.data.name ? r : undefined })[0];
+              record.uploading = true;
+              this.$refs.{{ widget.attrs.id }}_file_agent.upload(res.data.url, {}, [record], function() {
+                return record.file;
+              }, function(request) {
+                request.open('PUT', res.data.url, true);
+                request.setRequestHeader("Content-Type", record.type);
+              });
+            }
+          }.bind(this));
+        }
+        {% elif widget.attrs.upload_url %}
+          {% with header=widget.attrs.upload_url.header|safe %}
+          var header = {% if header %}{{ header }}{% else %}{}{% endif %};
+          {% endwith %}
+          this.$refs.{{ widget.attrs.id }}_file_agent.upload('{{ widget.attrs.upload_url.url }}', header, validFileRecords);
+        {% endif %}
+
+      },
+      onBeforeDelete: function (fileRecord) {
+        if (confirm('是否确认删除?')) {
+          this.$refs.{{ widget.attrs.id }}_file_agent.deleteFileRecord(fileRecord);
+        }
+      },
+      onUpload: function(responses) {
+        for (var response of responses){
+          if (response.error) {
+            this.uploading_error = true;
+            continue;
+          }
+          var record = response.fileRecord;
+          record.uploading = false;
+          record.final_url = response.request.responseURL.split('?')[0];
+        }
+      }
+    },
+});
+
+(function($) {
+  $(function() {
+    $("input[type=submit]").click(function(e) {
+      var vm = {{ widget.attrs.id }}_vue;
+      if (vm.uploading_error) {
+        e.preventDefault();
+        confirm('上传错误，请删除或重新上传后再保存');
+      }
+      else if (vm.uploading) {
+        e.preventDefault();
+        confirm('文件上传中');
+      }
+      else {
+        var files = [];
+        for (var record of vm.fileRecords) {
+            if (record.error) {
+              e.preventDefault();
+              confirm('上传错误，请删除或重新上传后再保存');
+              return;
+            }
+            var url = record.final_url || (typeof record.url == "function" ? record.url() : record.url );
+            var name = typeof record.name == "function" ? record.name() : record.name;
+            files.push({url: url, name: name, size: record.size, type: record.type});
+        }
+        django.jQuery('#{{ widget.attrs.id }}').val(JSON.stringify({files: files}));
+      }
+    })
+  });
+})(django.jQuery)
+</script>
