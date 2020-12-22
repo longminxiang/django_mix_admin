@@ -129,11 +129,17 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         if self.enable_preview_image:
             media += forms.Media(
                 js=[
-                    'popup/jquery.magnific-popup.min.js',
-                    'admin/js/preview_img.js',
+                    '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
+                    '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
+                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js',
+                    'admin/js/preview_files.js',
                     'admin/js/custom_action.js'
                 ],
-                css={'': ['popup/magnific-popup.css']})
+                css={'': [
+                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',
+                    '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css',
+                    '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video-js.min.css'
+                    ]})
         return media
 
 

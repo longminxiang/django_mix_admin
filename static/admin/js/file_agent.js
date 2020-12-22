@@ -5,8 +5,10 @@
      try {
       options = JSON.parse(el.dataset.options);
     } catch (error) {
-      value = {}
+      options = {}
     }
+    if (typeof el.dataset.disabled != "undefined") options.disabled = el.dataset.disabled;
+
     var value;
     try {
       value = JSON.parse(el.value);
@@ -35,6 +37,7 @@
         @upload="onUpload($event)" \
         v-model="fileRecords" \
       /> \
+      <div slot="after-outer" id="preview_all" style="padding: 8px 0;"><a href="#">查看</a></div> \
     </div>';
 
     $(el).hide();
@@ -137,7 +140,7 @@
         </span></div>');
       acts.remove();
 
-      var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action");
+      var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action").add('#preview_all a');
       els.off('click');
       els.click(function(e) {
         var index = $(".file-preview-wrapper").index($(this).parentsUntil('.file-preview-wrapper').parent()[0]);
