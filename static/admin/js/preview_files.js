@@ -1,5 +1,6 @@
 (function ($) {
     window.preview_files = function (urls, index) {
+        if (!urls || !urls.length) return;
         if (typeof urls == "string" && (urls.startsWith('.') || urls.startsWith('#'))) {
             var newUrls = [];
             $(urls).each(function () {

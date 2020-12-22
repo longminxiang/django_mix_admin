@@ -47,7 +47,7 @@
       el: '#' + vueElementId,
       data: function () {
         return {
-          fileRecords: value.files || [],
+          fileRecords: (value && value.files) || [],
           uploading: false,
           uploadingError: false,
         };
@@ -151,7 +151,7 @@
           if (!url) url = record.final_url;
           if (url) urls.push(url);
         }
-        preview_images(urls, index || 0);
+        preview_files(urls, index || 0);
       });
     }, 1000);
   }
