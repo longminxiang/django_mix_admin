@@ -55,13 +55,13 @@
 (function ($) {
     $(function () {
 
-        $('.readonly a, .file-upload a').click(function (e) {
+        $('.readonly a, .file-upload a').not('.download').click(function (e) {
             e.preventDefault();
 
             var cnt_url = $(this).attr('href');
 
             var urls = [];
-            $('.readonly a, .file-upload a').each(function () {
+            $('.readonly a, .file-upload a').not('.download').each(function () {
                 var url = $(this).attr('href');
                 urls.push(url);
             });
