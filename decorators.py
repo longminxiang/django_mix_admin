@@ -29,13 +29,15 @@ def import_file_action(desc, accept=None):
     return decorator
 
 
-def short_description(desc):
+def short_description(desc, boolean=False):
     '''
     short description装饰器
     \n@param desc 描述
     '''
     def decorator(func):
         func.short_description = desc
+        if boolean:
+            func.boolean = boolean
         return func
 
     return decorator
