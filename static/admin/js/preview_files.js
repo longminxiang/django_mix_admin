@@ -22,7 +22,7 @@
                     </video> \
                     <script>window.mix_video_player = videojs("#mix-video-player");</script></div>'
             }
-            else if (['doc', 'docx', 'pdf'].indexOf(ext) != -1) {
+            else if (['doc', 'docx', 'pdf', 'ppt', 'pptx', 'txt', 'xls', 'xlsx'].indexOf(ext) != -1) {
                 var surl = "https://doc.gxpx365.com/view/url/?url=" + encodeURIComponent(url);
                 shtml = '<iframe style="background-color:#eee;" id="mix-preview-iframe" frameborder=0 src="' + surl + '"></div>';
             }
