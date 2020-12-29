@@ -14,7 +14,7 @@
         for (var url of urls) {
             var ext = url.split('?')[0].split('.').reverse()[0].toLowerCase();
             var shtml;
-            if (ext == 'mp4') {
+            if (['mp3', 'mp4', 'wmv', 'mpg'].indexOf(ext) != -1) {
                 shtml = '<div style="width:800px;"> \
                     <script>window.mix_video_player && window.mix_video_player.dispose();</script> \
                     <video id="mix-video-player" class="video-js vjs-big-play-centered vjs-fluid" controls data-setup="{}"> \
