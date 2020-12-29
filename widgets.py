@@ -1,5 +1,6 @@
-from django import forms
 import json
+from django import forms
+from django.contrib.admin.widgets import AdminRadioSelect
 
 
 class FileAgentWidget(forms.widgets.Input):
@@ -21,3 +22,8 @@ class FileAgentWidget(forms.widgets.Input):
             '//cdn.jsdelivr.net/npm/vue-slicksort@latest/dist/vue-slicksort.min.js',
             'admin/js/file_agent.js'
         )
+
+
+class AdminHorizontalRadioSelect(AdminRadioSelect):
+    template_name = 'admin/widgets/mix_radio.html'
+    option_template_name = 'admin/widgets/mix_input_option.html'

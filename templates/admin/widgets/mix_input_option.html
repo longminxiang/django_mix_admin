@@ -1,0 +1,7 @@
+{% if widget.wrap_label %}
+<label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %} style="display: flex;align-items: center;">
+{% endif %}
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} style="flex: unset;">
+{% if widget.wrap_label %}
+<div style="padding: 2px 0 0 8px;">{{ widget.label }}</div>
+</label>{% endif %}
