@@ -1,29 +1,37 @@
 
 
-def action_description(desc, without_queryset=False, confirm=False, confirm_message=None):
+def action_description(desc, without_queryset=False, confirm=False, confirm_message=None, style=None):
     '''
     action description装饰器
     \n@param desc 描述
     \n@param without_queryset 默认action需要选择有记录才能执行, 加此参数不选中也执行
+    \n@param confirm 是否弹出确认弹窗
+    \n@param confirm_message 确认弹窗消息
+    \n@param style 按钮style
     '''
     def decorator(func):
         func.short_description = desc
         func.without_queryset = without_queryset
-        func.options = {'without_queryset': without_queryset, 'confirm': confirm, 'confirm_message': confirm_message}
+        func.options = {'without_queryset': without_queryset, 'confirm': confirm, 'confirm_message': confirm_message, 'style': style}
         return func
 
     return decorator
 
 
-def import_file_action(desc, accept=None):
-
+def import_file_action(desc, accept=None, style=None):
+    '''
+    导入文件 action description装饰器
+    \n@param desc 描述
+    \n@param accept 接受的文件格式
+    \n@param style 按钮style
+    '''
     def decorator(func):
         func.short_description = desc
         func.without_queryset = True
         t_accept = accept
         if t_accept and t_accept == 'xls':
             t_accept = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        func.options = {'import_file': True, 'accept': t_accept, 'without_queryset': True}
+        func.options = {'import_file': True, 'accept': t_accept, 'without_queryset': True, 'style': style}
         return func
 
     return decorator

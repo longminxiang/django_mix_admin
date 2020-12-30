@@ -10,7 +10,7 @@
       {% if action_name != '' %}
       {% with options=action_options|get_item:action_name %}
       <li>
-        <a href="javascript:void(0)" onclick="mix_custom_action('{{ action_name }}', {{ options|json_str }})">
+        <a {% if style='{{ options.style|default:"background:#0f59a4;" }}' href="javascript:void(0);" onclick="mix_custom_action('{{ action_name }}', {{ options|json_str }})">
           {% if action_name == 'delete_selected' %}批量删除{% else %}{{ action|last }}{% endif %}
         </a>
       </li>
