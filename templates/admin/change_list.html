@@ -92,6 +92,10 @@
               {% endblock %}
             </ul>
           {% endblock %}
+          {% if list_tips %}<div style="margin:8px 0;padding:8px 6px;color:#447e9b;font-size:15px;font-weight:500;background:#f6f6f6;border-radius:4px;word-break:break-all;">
+            {{ list_tips }}
+          </div>
+          {% endif %}
           {% if action_form and actions_on_top and cl.show_admin_actions %}{% admin_actions %}{% endif %}
           </div>
           {% result_list cl %}

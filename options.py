@@ -58,6 +58,9 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         placeholder += "搜索"
         return placeholder
 
+    def get_list_tips(self, request):
+        return None
+
     def get_custom_form_buttons(self, request, object_id):
         return self.custom_form_buttons
 
@@ -79,6 +82,8 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             act_func = tpl[0]
             act_data = getattr(act_func, 'options', None)
             action_options[name] = act_data
+
+        extra_context['list_tips'] = self.get_list_tips(request)
 
         return extra_context
 
