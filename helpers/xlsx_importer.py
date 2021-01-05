@@ -6,14 +6,19 @@ from django.http import HttpResponseRedirect
 
 class HeaderIndex:
 
-    def __init__(self, headers, header_flag):
+    def __init__(self, headers):
         super().__init__()
-        for k, v in HeaderIndex.__dict__.items():
+        for k, v in self.__class__.__dict__.items():
             if k.startswith('__'):
                 continue
-            idx = headers.index(v) if v in headers else -1
-            if v == header_flag:
-                self.header_flag_index = idx
+            idx = -1
+            if isinstance(v, str):
+                idx = headers.index(v) if v in headers else -1
+            elif isinstance(v, (tuple, list)):
+                for vv in v:
+                    idx = headers.index(vv) if vv in headers else -1
+                    if idx != -1:
+                        break
             setattr(self, k, idx)
 
 
