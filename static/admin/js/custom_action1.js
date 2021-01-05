@@ -42,12 +42,28 @@
             if (options.accept) fileInput.accept = options.accept;
             fileInput.click();
         }
+        else if (options.ajax) {
+            var ajax = window.mix_custom_action_ajaxs && window.mix_custom_action_ajaxs[options.name];
+            if (typeof ajax == "function") {
+                var formData = new FormData(form);
+                var across = formData.get('select_across');
+                var selecteds = formData.getAll('_selected_action');
+                ajax({across: across, selecteds: selecteds});
+            }
+        }
         else {
             var fileInput = document.getElementById("changelist-form-file");
             if (fileInput) form.removeChild(fileInput);
             form.removeAttribute("enctype");
             form.submit();
         }
+    };
+
+    window.mix_custom_action_add_ajax = function (name, func) {
+        if (typeof window.mix_custom_action_ajaxs == "undefined") {
+            window.mix_custom_action_ajaxs = [];
+        }
+        window.mix_custom_action_ajaxs[name] = func;
     };
 
     window.mix_custom_action = function (action, options) {
@@ -70,4 +86,33 @@
         }
         return false;
     }
+
+    // req: {bucketName: bucketName, prefix: prefix, objects: objects}
+    window.downloadMinioZip = function (url, req) {
+        var anchor = document.createElement("a")
+        document.body.appendChild(anchor)
+
+        var xhr = new XMLHttpRequest()
+        xhr.open("POST", url, true)
+        xhr.responseType = "blob"
+
+        xhr.onload = function (e) {
+            if (this.status == 200) {
+                var blob = new Blob([this.response], {
+                    type: "octet/stream",
+                })
+                var blobUrl = window.URL.createObjectURL(blob)
+                var separator = req.prefix.length > 1 ? "-" : ""
+
+                anchor.href = blobUrl
+                anchor.download = req.bucketName + separator + req.prefix.slice(0, -1) + ".zip"
+
+                anchor.click()
+                window.URL.revokeObjectURL(blobUrl)
+                anchor.remove()
+            }
+        }
+        xhr.send(JSON.stringify(req))
+    }
+
 })(django.jQuery)

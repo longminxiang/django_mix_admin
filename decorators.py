@@ -1,6 +1,6 @@
 
 
-def action_description(desc, without_queryset=False, confirm=False, confirm_message=None, style=None):
+def action_description(desc, without_queryset=False, confirm=False, confirm_message=None, style=None, ajax=False):
     '''
     action description装饰器
     \n@param desc 描述
@@ -12,7 +12,9 @@ def action_description(desc, without_queryset=False, confirm=False, confirm_mess
     def decorator(func):
         func.short_description = desc
         func.without_queryset = without_queryset
-        func.options = {'without_queryset': without_queryset, 'confirm': confirm, 'confirm_message': confirm_message, 'style': style}
+        func.options = {
+            'name': func.__name__, 'without_queryset': without_queryset, 'confirm': confirm,
+            'confirm_message': confirm_message, 'style': style, 'ajax': ajax}
         return func
 
     return decorator
