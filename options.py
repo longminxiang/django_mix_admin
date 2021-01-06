@@ -138,7 +138,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
                     '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js',
                     'admin/js/preview_files.js',
-                    'admin/js/custom_action1.js'
+                    'admin/js/custom_action2.js'
                 ],
                 css={'': [
                     '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',

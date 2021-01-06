@@ -96,6 +96,7 @@
         xhr.open("POST", url, true)
         xhr.responseType = "blob"
 
+        mixLoading.show(20000);
         xhr.onload = function (e) {
             if (this.status == 200) {
                 var blob = new Blob([this.response], {
@@ -110,9 +111,41 @@
                 anchor.click()
                 window.URL.revokeObjectURL(blobUrl)
                 anchor.remove()
+                mixLoading.hide();
             }
         }
         xhr.send(JSON.stringify(req))
+    }
+
+    window.mixLoading = {
+        timeoutHandle: undefined,
+        show: function(timeout) {
+            var loadingHtml = '<div class="sk-circle"> \
+                <div class="sk-circle1 sk-child"></div> \
+                <div class="sk-circle2 sk-child"></div> \
+                <div class="sk-circle3 sk-child"></div> \
+                <div class="sk-circle4 sk-child"></div> \
+                <div class="sk-circle5 sk-child"></div> \
+                <div class="sk-circle6 sk-child"></div> \
+                <div class="sk-circle7 sk-child"></div> \
+                <div class="sk-circle8 sk-child"></div> \
+                <div class="sk-circle9 sk-child"></div> \
+                <div class="sk-circle10 sk-child"></div> \
+                <div class="sk-circle11 sk-child"></div> \
+                <div class="sk-circle12 sk-child"></div> \
+            </div>';
+            swal.fire({
+                html: loadingHtml, showConfirmButton: false, background:'transparent', width: 'unset',
+                allowOutsideClick: false,
+            });
+            mixLoading.timeoutHandle = setTimeout(function () {
+                mixLoading.hide();
+            }, timeout || 10000);
+        },
+        hide: function() {
+            swal.close();
+            mixLoading.timeoutHandle && clearTimeout(mixLoading.timeoutHandle);
+        }
     }
 
 })(django.jQuery)
