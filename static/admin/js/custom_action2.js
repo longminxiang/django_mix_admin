@@ -48,7 +48,7 @@
                 var formData = new FormData(form);
                 var across = formData.get('select_across');
                 var selecteds = formData.getAll('_selected_action');
-                ajax({across: across, selecteds: selecteds});
+                ajax({ across: across, selecteds: selecteds });
             }
         }
         else {
@@ -119,7 +119,7 @@
 
     window.mixLoading = {
         timeoutHandle: undefined,
-        show: function(timeout) {
+        show: function (timeout) {
             var loadingHtml = '<div class="sk-circle"> \
                 <div class="sk-circle1 sk-child"></div> \
                 <div class="sk-circle2 sk-child"></div> \
@@ -135,14 +135,14 @@
                 <div class="sk-circle12 sk-child"></div> \
             </div>';
             swal.fire({
-                html: loadingHtml, showConfirmButton: false, background:'transparent', width: 'unset',
+                html: loadingHtml, showConfirmButton: false, background: 'transparent', width: 'unset',
                 allowOutsideClick: false,
             });
             mixLoading.timeoutHandle = setTimeout(function () {
                 mixLoading.hide();
             }, timeout || 10000);
         },
-        hide: function() {
+        hide: function () {
             swal.close();
             mixLoading.timeoutHandle && clearTimeout(mixLoading.timeoutHandle);
         }
