@@ -27,7 +27,7 @@
                 shtml = '<iframe style="background-color:#eee;" id="mix-preview-iframe" frameborder=0 src="' + surl + '"></div>';
             }
             else {
-                shtml = '<img src="' + url + '"/>';
+                shtml = '<img id="mix-preview-img" src="' + url + '"/>';
             }
             items.push({src: '<div style="display:flex;justify-content:center;">' + shtml + '</div>', type: 'inline'});
         }
@@ -45,6 +45,26 @@
                     var miframe = $(this.content).find("#mix-preview-iframe");
                     miframe.width($(window).width() * 0.8);
                     miframe.height($(window).height() * 0.9);
+
+                    var mimg = $(this.content).find("#mix-preview-img");
+                    var src = mimg.length >= 1 && mimg[0].src;
+                    if (src) {
+                        var cb = function(img) {
+                            if (img.height > $(window).height()) {
+                                mimg.height($(window).height() * 0.9);
+                            }
+                        }
+                        var img = new Image();
+                        img.src = src;
+                        if (img.complete) {
+                            cb(img);
+                        }
+                        else {
+                            img.onload = function() {
+                                cb(img);
+                            }
+                        }
+                    }
                 }
             }
         }, index);

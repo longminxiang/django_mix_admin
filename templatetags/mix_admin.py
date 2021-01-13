@@ -15,3 +15,10 @@ def json_str(value):
     from django.core.serializers.json import DjangoJSONEncoder
     json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes).replace('"', "'")
     return json_str
+
+
+@register.filter
+def json_str1(value):
+    from django.core.serializers.json import DjangoJSONEncoder
+    json_str = json.dumps(value, cls=DjangoJSONEncoder).translate(_json_script_escapes)
+    return json_str

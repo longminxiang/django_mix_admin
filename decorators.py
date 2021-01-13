@@ -1,6 +1,8 @@
 
 
-def action_description(desc, without_queryset=False, confirm=False, confirm_message=None, style=None, ajax=False):
+def action_description(
+        desc, without_queryset=False, confirm=False, confirm_message=None,
+        style=None, ajax=False, show_in_add=False):
     '''
     action description装饰器
     \n@param desc 描述
@@ -8,13 +10,15 @@ def action_description(desc, without_queryset=False, confirm=False, confirm_mess
     \n@param confirm 是否弹出确认弹窗
     \n@param confirm_message 确认弹窗消息
     \n@param style 按钮style
+    \n@param show_in_add 当用来装饰form button时，表示是否在add form中显示
     '''
     def decorator(func):
         func.short_description = desc
         func.without_queryset = without_queryset
+        func.show_in_add = show_in_add or False
         func.options = {
             'name': func.__name__, 'without_queryset': without_queryset, 'confirm': confirm,
-            'confirm_message': confirm_message, 'style': style, 'ajax': ajax}
+            'confirm_message': confirm_message, 'style': style, 'ajax': ajax, 'show_in_add': show_in_add}
         return func
 
     return decorator

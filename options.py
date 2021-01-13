@@ -36,7 +36,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
     search_placeholder = {}
 
     # 自定义详情按钮
-    # 格式：(NAME, {'display': BTN_NAME, 'action': ACTION_FUNC}),
+    # 格式：(NAME, {'display': BTN_NAME, 'action': ACTION_FUNC, 'show_in_addform': SHOW_IN_ADD_FORM}),
     custom_form_buttons = ()
     # 隐藏原生按钮
     hide_original_form_buttons = False
@@ -96,7 +96,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
     def _changeform_view(self, request, object_id, form_url, extra_context):
         # 自定义详情按钮
         custom_form_buttons = self.get_custom_form_buttons(request, object_id)
-        if bool(custom_form_buttons) and bool(object_id):
+        if bool(custom_form_buttons):
             extra_context = extra_context or {}
             extra_context['custom_form_buttons'] = custom_form_buttons
         # 隐藏原生按钮
@@ -107,7 +107,8 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
 
         if request.method == 'POST':
             for name, btn in custom_form_buttons:
-                if name not in request.POST:
+                if name not in request.POST or name in [
+                        '_save', '_saveasnew', '_continue', '_addanother', '_continue']:
                     continue
                 qs = self.model.objects.filter(pk=object_id)
                 res = btn.get('action')(self, request, qs)
@@ -136,15 +137,13 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                 js=[
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
-                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js',
-                    'admin/js/preview_files.js',
-                    'admin/js/custom_action2.js'
+                    'admin/js/preview_files_0113.js',
+                    'admin/js/custom_action_0113.js'
                 ],
                 css={'': [
-                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css',
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video-js.min.css'
-                    ]})
+                ]})
         return media
 
 

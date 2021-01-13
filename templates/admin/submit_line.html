@@ -1,9 +1,13 @@
-{% load i18n admin_urls %}
+{% load i18n admin_urls mix_admin %}
 <div class="submit-row">
 {% block submit-row %}
 {% comment %} Eric: 自定义按钮 {% endcomment %}
 {% for name, btn in custom_form_buttons %}
-<input type="submit" value="{{ btn.display }}" class="deletelink" name="{{ name }}">
+{% if add %}
+{% if btn.options.show_in_add %}<input class="custom-form-btn" type="submit" data-options="{{ btn.options|json_str1 }}" value="{{ btn.display }}" name="{{ name }}">{% endif %}
+{% else %}
+<input class="custom-form-btn" type="submit" data-options="{{ btn.options|json_str1 }}" value="{{ btn.display }}" name="{{ name }}">
+{% endif %}
 {% endfor %}
 {% comment %} Eric: 自定义按钮 end {% endcomment %}
 

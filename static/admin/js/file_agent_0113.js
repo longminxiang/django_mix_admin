@@ -22,14 +22,13 @@
       <vue-file-agent \
         ref="' + vueElementRef + '" \
         :multiple="true" \
-        :disabled="' + (options.disabled || false) + '" \
-        :deletable="true" \
+        :deletable="' + (options.disabled ? 'false' : 'true') + '" \
         :linkable="true" \
-        sortable="handle" \
+        :sortable="' + (options.disabled ? 'false' : '\'handle\'') + '" \
         :meta="false" \
         accept="' + (options.accept || '*') + '" \
         max-size="' + (options.maxsize || '10M') + '" \
-        :max-files="' + (options.maxfiles || 1) + '" \
+        :max-files="' + (options.disabled ? 1 : (options.maxfiles || 1)) + '" \
         help-text="' + (options.helptext || '') + '" \
         error-text="'+ (options.errortext || {}) + '" \
         @select="filesSelected($event)" \
@@ -37,7 +36,6 @@
         @upload="onUpload($event)" \
         v-model="fileRecords" \
       /> \
-      <div slot="after-outer" id="preview_all" style="padding: 8px 0;"><a href="#">查看</a></div> \
     </div>';
 
     $(el).hide();
@@ -97,8 +95,8 @@
             var record = response.fileRecord;
             record.uploading = false;
             record.final_url = response.request.responseURL.split('?')[0];
-            fixPreview(el);
           }
+          fixPreview(el);
         }
       },
     });
@@ -140,7 +138,7 @@
         </span></div>');
       acts.remove();
 
-      var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action").add('#preview_all a');
+      var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action");
       els.off('click');
       els.click(function(e) {
         var index = $(".file-preview-wrapper").index($(this).parentsUntil('.file-preview-wrapper').parent()[0]);
@@ -153,7 +151,7 @@
         }
         preview_files(urls, index || 0);
       });
-    }, 1000);
+    }, 500);
   }
 
   $(function () {

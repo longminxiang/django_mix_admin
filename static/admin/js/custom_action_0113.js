@@ -48,7 +48,7 @@
                 var formData = new FormData(form);
                 var across = formData.get('select_across');
                 var selecteds = formData.getAll('_selected_action');
-                ajax({across: across, selecteds: selecteds});
+                ajax({ across: across, selecteds: selecteds });
             }
         }
         else {
@@ -69,17 +69,9 @@
     window.mix_custom_action = function (action, options) {
         options = options || {};
         if (options.confirm) {
-            swal.fire({
-                title: "提示", text: options.confirm_message || "确认执行",
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                showCancelButton: true
-            })
-                .then(function (t) {
-                    if (t.isConfirmed) {
-                        _perform_action(action, options);
-                    }
-                });
+            if (confirm(options.confirm_message || "确认执行")) {
+                _perform_action(action, options);
+            }
         }
         else {
             _perform_action(action, options);
@@ -119,7 +111,7 @@
 
     window.mixLoading = {
         timeoutHandle: undefined,
-        show: function(timeout) {
+        show: function (timeout) {
             var loadingHtml = '<div class="sk-circle"> \
                 <div class="sk-circle1 sk-child"></div> \
                 <div class="sk-circle2 sk-child"></div> \
@@ -135,17 +127,29 @@
                 <div class="sk-circle12 sk-child"></div> \
             </div>';
             swal.fire({
-                html: loadingHtml, showConfirmButton: false, background:'transparent', width: 'unset',
+                html: loadingHtml, showConfirmButton: false, background: 'transparent', width: 'unset',
                 allowOutsideClick: false,
             });
             mixLoading.timeoutHandle = setTimeout(function () {
                 mixLoading.hide();
             }, timeout || 10000);
         },
-        hide: function() {
+        hide: function () {
             swal.close();
             mixLoading.timeoutHandle && clearTimeout(mixLoading.timeoutHandle);
         }
     }
+
+    $(function () {
+        $('.custom-form-btn').click(function (e) {
+            var options = $(this).data('options') || {};
+            if (options.confirm) {
+                e.preventDefault();
+                if (confirm(options.confirm_message || "确认执行")) {
+                    document.querySelector("form").submit();
+                }
+            }
+        });
+    });
 
 })(django.jQuery)

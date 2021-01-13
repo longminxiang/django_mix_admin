@@ -14,4 +14,5 @@ def get_changeform_url(model_admin, obj):
 def change_action_to_custom_form_button(action):
     name = action.__name__
     des = getattr(action, 'short_description', name)
-    return (name, {'display': des, 'action': action})
+    options = getattr(action, 'options', {})
+    return (name, {'display': des, 'action': action, 'options': options})
