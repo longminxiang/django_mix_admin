@@ -88,7 +88,7 @@
         xhr.open("POST", url, true)
         xhr.responseType = "blob"
 
-        mixLoading.show(20000);
+        mixLoading.show(60000);
         xhr.onload = function (e) {
             if (this.status == 200) {
                 var blob = new Blob([this.response], {
