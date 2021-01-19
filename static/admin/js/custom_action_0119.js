@@ -140,6 +140,22 @@
         }
     }
 
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     $(function () {
         $('.custom-form-btn').click(function (e) {
             var options = $(this).data('options') || {};
@@ -148,6 +164,27 @@
                 if (confirm(options.confirm_message || "确认执行")) {
                     document.querySelector("form").submit();
                 }
+            }
+        });
+
+        function submitMixListAction(data) {
+            var form = $('<form method="post"></form>')
+            $.each(data, function (k, v) {
+                form.append('<input type="text" name="' + k + '" value="' + v + '"></input>');
+            });
+            form.submit();
+        };
+
+        $('.mix-list-action').click(function() {
+            var data = $(this).data() || {};
+            data['csrfmiddlewaretoken'] = getCookie('csrftoken');
+            if (data.confirm) {
+                if (confirm(data.confirm)) {
+                    submitMixListAction(data);
+                }
+            }
+            else {
+                submitMixListAction(data);
             }
         });
     });

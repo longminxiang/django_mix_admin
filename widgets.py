@@ -21,7 +21,7 @@ class FileAgentWidget(forms.widgets.Input):
             '//cdn.jsdelivr.net/npm/vue/dist/vue.min.js',
             '//cdn.jsdelivr.net/npm/vue-file-agent@latest/dist/vue-file-agent.umd.js',
             '//cdn.jsdelivr.net/npm/vue-slicksort@latest/dist/vue-slicksort.min.js',
-            'admin/js/file_agent_0113.js'
+            'admin/js/file_agent_0119.js'
         )
 
 

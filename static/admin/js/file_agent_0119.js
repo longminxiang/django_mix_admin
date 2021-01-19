@@ -41,6 +41,37 @@
     $(el).hide();
     $(el).after(vueHtml);
 
+    Vue.mixin({
+      mounted: function() {
+        var cls = this.$el.getAttribute('class');
+        if (cls && cls.indexOf('grid-box-item') >= 0) {
+          var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action");
+          els.off('click');
+          els.click(function(e) {
+            var index = $(".file-preview-wrapper").index($(this).parentsUntil('.file-preview-wrapper').parent()[0]);
+            e.preventDefault();
+            var urls = [];
+            for (var record of el.vm.fileRecords) {
+              var url = typeof record.url == "function" ? record.url() : record.url;
+              if (!url) url = record.final_url;
+              if (url) urls.push(url);
+            }
+            preview_files(urls, index || 0);
+          });
+        }
+      },
+      methods: {
+        playAv() {}
+      }
+    });
+
+    Vue.config.optionMergeStrategies.methods = function (toVal, fromVal) {
+      if (!toVal) return fromVal
+      if (!fromVal) return toVal
+      if (fromVal.playAv) fromVal.playAv = toVal.playAv;
+      return fromVal;
+    }
+
     el.vm = new Vue({
       el: '#' + vueElementId,
       data: function () {
@@ -49,9 +80,6 @@
           uploading: false,
           uploadingError: false,
         };
-      },
-      mounted: function() {
-        fixPreview(el);
       },
       methods: {
         filesSelected: function (fileRecordsNewlySelected) {
@@ -96,7 +124,6 @@
             record.uploading = false;
             record.final_url = response.request.responseURL.split('?')[0];
           }
-          fixPreview(el);
         }
       },
     });
@@ -125,33 +152,6 @@
       $(el).val(JSON.stringify({ files: files }));
     }
     return true;
-  }
-
-  function fixPreview(el) {
-    setTimeout(function() {
-      var acts = $(".file-av-action");
-      acts.after('<div class="file-av-action">\
-        <span class="file-av-play"> \
-          <svg viewBox="0 0 48 48"> \
-            <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-4 29V15l12 9-12 9z"></path> \
-          </svg> \
-        </span></div>');
-      acts.remove();
-
-      var els = $(".file-preview-wrapper").find(".thumbnail, .file-icon, .file-av-action");
-      els.off('click');
-      els.click(function(e) {
-        var index = $(".file-preview-wrapper").index($(this).parentsUntil('.file-preview-wrapper').parent()[0]);
-        e.preventDefault();
-        var urls = [];
-        for (var record of el.vm.fileRecords) {
-          var url = typeof record.url == "function" ? record.url() : record.url;
-          if (!url) url = record.final_url;
-          if (url) urls.push(url);
-        }
-        preview_files(urls, index || 0);
-      });
-    }, 500);
   }
 
   $(function () {
