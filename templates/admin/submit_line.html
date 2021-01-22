@@ -3,10 +3,12 @@
 {% block submit-row %}
 {% comment %} Eric: 自定义按钮 {% endcomment %}
 {% for name, btn in custom_form_buttons %}
-{% if add %}
-{% if btn.options.show_in_add %}<input class="custom-form-btn" type="submit" data-options="{{ btn.options|json_str1 }}" value="{{ btn.display }}" name="{{ name }}">{% endif %}
+{% if not add or add and btn.options.show_in_add %}
+{% if btn.options.href %}
+<a href="{{ btn.options.href }}" style="background:#79aec8;" class="closelink">{{ btn.display }}</a>
 {% else %}
 <input class="custom-form-btn" type="submit" data-options="{{ btn.options|json_str1 }}" value="{{ btn.display }}" name="{{ name }}">
+{% endif %}
 {% endif %}
 {% endfor %}
 {% comment %} Eric: 自定义按钮 end {% endcomment %}

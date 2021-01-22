@@ -106,13 +106,19 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             extra_context['hide_original_form_buttons'] = hide_original_form_buttons
 
         if request.method == 'POST':
+            origin_btns = ['_save', '_saveasnew', '_continue', '_addanother', '_continue']
             for name, btn in custom_form_buttons:
-                if name not in request.POST or name in [
-                        '_save', '_saveasnew', '_continue', '_addanother', '_continue']:
+                if name not in request.POST or name in origin_btns:
                     continue
                 qs = self.model.objects.filter(pk=object_id)
                 res = btn.get('action')(self, request, qs)
                 return res or HttpResponseRedirect(request.path)
+
+            # 如果隐藏了原生按钮，不响应原生操作
+            if hide_original_form_buttons:
+                is_origin = [n for n in origin_btns if n in request.POST]
+                if len(is_origin):
+                    return HttpResponseRedirect(request.path)
 
         return super()._changeform_view(request, object_id, form_url, extra_context)
 
