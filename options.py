@@ -116,7 +116,8 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
 
             # 如果隐藏了原生按钮，不响应原生操作
             if hide_original_form_buttons:
-                is_origin = [n for n in origin_btns if n in request.POST]
+                custom_buttons = [n[0] for n in custom_form_buttons]
+                is_origin = [n for n in origin_btns if n in request.POST and n not in custom_buttons]
                 if len(is_origin):
                     return HttpResponseRedirect(request.path)
 
