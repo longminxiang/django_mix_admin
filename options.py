@@ -142,12 +142,14 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         if self.enable_preview_image:
             media += forms.Media(
                 js=[
+                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js',
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
                     'admin/js/preview_files_0113.js',
                     'admin/js/custom_action_0119.js'
                 ],
                 css={'': [
+                    '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css',
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video-js.min.css'
                 ]})
