@@ -44,6 +44,8 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
     # 预览图片
     enable_preview_image = True
 
+    list_display_min_width = {}
+
     def get_search_placeholder(self, request):
         return self.search_placeholder
 
@@ -60,6 +62,9 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
 
     def get_list_tips(self, request):
         return None
+
+    def get_list_display_min_width(self, request):
+        return self.list_display_min_width
 
     def get_custom_form_buttons(self, request, object_id):
         return self.custom_form_buttons
@@ -84,6 +89,9 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             action_options[name] = act_data
 
         extra_context['list_tips'] = self.get_list_tips(request)
+
+        min_width_fields = self.get_list_display_min_width(request)
+        extra_context['min_width_fields'] = [(k, v) for k, v in min_width_fields.items()]
 
         return extra_context
 

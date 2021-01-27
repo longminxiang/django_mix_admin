@@ -11,7 +11,11 @@
       {% with options=action_options|get_item:action_name %}
       <li>
         <a
+          {% if not options.style and action_name == "delete_selected" %}
+          style='background-color:#a41515'
+          {% else %}
           style='{{ options.style|default:"background:#0f59a4;" }}'
+          {% endif %}
           {% if options.href %}
           href="{{ options.href }}"
           {% else %}
@@ -32,9 +36,7 @@
   {% if has_add_permission %}
   <li>
     {% url cl.opts|admin_urlname:'add' as add_url %}
-    <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink">
-      {% blocktrans with cl.opts.verbose_name as name %}增加{% endblocktrans %}
-    </a>
+    <a href="{% add_preserved_filters add_url is_popup to_field %}" class="addlink" style="background-color:#0f59a4;">增加</a>
   </li>
   {% endif %}
 {% endblock %}

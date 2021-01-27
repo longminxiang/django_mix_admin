@@ -26,6 +26,11 @@
     background: #ffffcc;
 }
 
+#changelist table tr th, #changelist table tr td {
+    white-space: nowrap;
+}
+
+
 #changelist-search {
     margin-top: 12px;
 }

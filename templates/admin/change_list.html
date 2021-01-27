@@ -107,6 +107,12 @@
     {% comment %} Eric: 修复一下content padding-top {% endcomment %}
     <script>
       document.getElementById("content").style.paddingTop = '0';
+      (function ($) {
+        {% for field, width in min_width_fields %}
+        $(".field-{{ field }}").css('white-space', 'unset');
+        $(".field-{{ field }}").css('min-width', '{{ width }}');
+        {% endfor %}
+      })(django.jQuery)
     </script>
     {% comment %} Eric: 修复一下content padding-top End {% endcomment %}
   </div>
