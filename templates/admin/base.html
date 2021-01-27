@@ -16,9 +16,11 @@
 
 {% comment %} Eric: 注入自定义css, jq每个页面都需要 {% endcomment %}
 <link rel="stylesheet" type="text/css" href="{% static 'admin/css/xbase.css' %}?v=2021010601">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.css">
 
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'admin/js/jquery.init.js' %}"></script>
+<script src="//cdn.jsdelivr.net/npm/noty@3.1.4/lib/noty.min.js"></script>
 {% comment %} Eric: 注入自定义css, jq每个页面都需要 end {% endcomment %}
 
 {% block extrahead %}{% endblock %}
@@ -97,11 +99,11 @@
     {% endif %}
 
     {% block messages %}
-        {% if messages %}
+        {% comment %} {% if messages %}
         <ul class="messagelist">{% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
         {% endfor %}</ul>
-        {% endif %}
+        {% endif %} {% endcomment %}
     {% endblock messages %}
 
     <!-- Content -->
@@ -135,6 +137,23 @@
 <!-- END Container -->
 {% if has_sidebar %}
 <script type="text/javascript" src="{% static 'admin/js/sidebar.js' %}?v=1"></script>
+{% endif %}
+{% if messages %}
+<script>
+    (function ($) {
+        $(function () {
+            Noty.setMaxVisible(10);
+            {% for message in messages %}
+            var options = {theme: 'metroui', type: '{{ message.tags }}', layout: 'topRight', text: '{{ message|capfirst }}', closeWith: ['click']};
+        {% if message.tags != 'error' %}
+            options['timeout'] = '5000';
+            options['progressBar'] = true;
+            {% endif %}
+            new Noty(options).show();
+            {% endfor %}
+        });
+    })(django.jQuery)
+</script>
 {% endif %}
 </body>
 </html>

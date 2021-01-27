@@ -136,6 +136,15 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             self.message_user(request, msg, messages.ERROR)
         return response
 
+    def message_user(self, request, message, level=messages.INFO, extra_tags='', fail_silently=False):
+        if '修改成功' in message or '你可以在下面再次编辑它' in message:
+            message = '保存成功'
+        elif '添加成功' in message:
+            message = '添加成功'
+        elif '删除成功' in message:
+            message = '删除成功'
+        return super().message_user(request, message, level, extra_tags, fail_silently)
+
     @property
     def media(self):
         media = super().media
