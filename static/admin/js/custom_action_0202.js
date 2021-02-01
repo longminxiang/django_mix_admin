@@ -168,10 +168,11 @@
         });
 
         function submitMixListAction(data) {
-            var form = $('<form method="post"></form>')
+            var form = $('<form method="post" style="display:none;"></form>')
             $.each(data, function (k, v) {
                 form.append('<input type="text" name="' + k + '" value="' + v + '"></input>');
             });
+            $(body).append(form);
             form.submit();
         };
 

@@ -164,7 +164,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
                     '//cdn.jsdelivr.net/npm/floatthead@2.2.1/dist/jquery.floatThead.min.js',
                     'admin/js/preview_files_0113.js',
-                    'admin/js/custom_action_0119.js'
+                    'admin/js/custom_action_0202.js'
                 ],
                 css={'': [
                     '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',
