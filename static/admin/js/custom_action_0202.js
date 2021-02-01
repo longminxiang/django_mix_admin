@@ -172,7 +172,7 @@
             $.each(data, function (k, v) {
                 form.append('<input type="text" name="' + k + '" value="' + v + '"></input>');
             });
-            $(body).append(form);
+            $('body').append(form);
             form.submit();
         };
 
