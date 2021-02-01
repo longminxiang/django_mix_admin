@@ -112,6 +112,9 @@
         $(".field-{{ field }}").css('white-space', 'unset');
         $(".field-{{ field }}").css('min-width', '{{ width }}');
         {% endfor %}
+        $(function () {
+          $('table').floatThead({top: $(document).width() <= 1024 ? 0 : $("#x-header").height()});
+        });
       })(django.jQuery)
     </script>
     {% comment %} Eric: 修复一下content padding-top End {% endcomment %}

@@ -149,7 +149,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
             message = '保存成功'
         elif '添加成功' in message:
             message = '添加成功'
-        elif '删除成功' in message:
+        elif '删除成功' in message or '成功删除' in message:
             message = '删除成功'
         return super().message_user(request, message, level, extra_tags, fail_silently)
 
@@ -162,6 +162,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.js',
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
+                    '//cdn.jsdelivr.net/npm/floatthead@2.2.1/dist/jquery.floatThead.min.js',
                     'admin/js/preview_files_0113.js',
                     'admin/js/custom_action_0119.js'
                 ],
