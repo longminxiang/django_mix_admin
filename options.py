@@ -3,11 +3,13 @@ from django import forms
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.db.models import DateField, DateTimeField
 from django.template.response import SimpleTemplateResponse
 from django.forms.widgets import Media
 from django.contrib import messages
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from .widgets import LayDateWidget, LayDateTimeWidget
 
 
 class ModelAdminProxy:
@@ -45,6 +47,11 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
     enable_preview_image = True
 
     list_display_min_width = {}
+
+    formfield_overrides = {
+        DateField: {'widget': LayDateWidget},
+        DateTimeField: {'widget': LayDateTimeWidget}
+    }
 
     def get_search_placeholder(self, request):
         return self.search_placeholder
@@ -163,6 +170,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     '//cdn.jsdelivr.net/npm/video.js@7.10.2/dist/video.min.js',
                     '//cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js',
                     '//cdn.jsdelivr.net/npm/floatthead@2.2.1/dist/jquery.floatThead.min.js',
+                    'admin/js/mix_admin_02041.js',
                     'admin/js/preview_files_0113.js',
                     'admin/js/custom_action_0202.js'
                 ],

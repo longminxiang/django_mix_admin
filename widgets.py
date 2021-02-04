@@ -138,3 +138,46 @@ class EleDateWidget(forms.widgets.DateInput):
             '//cdn.jsdelivr.net/npm/vue/dist/vue.min.js',
             'admin/ele_date_picker/EleDatePicker.umd.min.js'
         )
+
+
+class LayDateWidget(forms.widgets.DateInput):
+
+    def __init__(self, attrs=None, format=None):
+        attrs = attrs or {}
+        attrs['data-mixtype'] = 'laydate'
+        super().__init__(attrs, format)
+
+    class Media:
+        js = (
+            '//cdn.jsdelivr.net/npm/layui-laydate@5.0.9/dist/laydate.min.js',
+        )
+
+
+class LayDateTimeWidget(forms.widgets.DateTimeInput):
+
+    def __init__(self, attrs=None, format=None):
+        attrs = attrs or {}
+        attrs['data-mixtype'] = 'laydatetime'
+        super().__init__(attrs, format)
+
+    def format_value(self, value):
+        value = to_current_timezone(value)
+        val = super().format_value(value)
+        return val
+
+    def value_from_datadict(self, data, files, name):
+        val = super().value_from_datadict(data, files, name)
+        if bool(val):
+            val = val.split(' ')
+        return val
+
+    def decompress(self, value):
+        if value:
+            value = to_current_timezone(value)
+            return [value.date(), value.time()]
+        return [None, None]
+
+    class Media:
+        js = (
+            '//cdn.jsdelivr.net/npm/layui-laydate@5.0.9/dist/laydate.min.js',
+        )
