@@ -7,7 +7,8 @@ register = Library()
 
 @register.filter
 def get_item(dic, key):
-    return dic.get(key)
+    if isinstance(dic, dict):
+        return dic.get(key)
 
 
 @register.filter
