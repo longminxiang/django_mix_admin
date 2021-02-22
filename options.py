@@ -123,7 +123,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
         if request.method == 'POST':
             origin_btns = ['_save', '_saveasnew', '_continue', '_addanother', '_continue']
             for name, btn in custom_form_buttons:
-                if name not in request.POST or name in origin_btns:
+                if name not in request.POST or name in origin_btns or name.startswith('_'):
                     continue
                 qs = self.model.objects.filter(pk=object_id)
                 res = btn.get('action')(self, request, qs)
@@ -172,7 +172,7 @@ class ModelAdmin(admin.ModelAdmin, ModelAdminProxy):
                     '//cdn.jsdelivr.net/npm/floatthead@2.2.1/dist/jquery.floatThead.min.js',
                     'admin/js/mix_admin_02041.js',
                     'admin/js/preview_files_0113.js',
-                    'admin/js/custom_action_0202.js'
+                    'admin/js/custom_action_0222.js'
                 ],
                 css={'': [
                     '//cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css',

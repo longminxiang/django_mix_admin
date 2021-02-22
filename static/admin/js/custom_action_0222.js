@@ -162,7 +162,13 @@
             if (options.confirm) {
                 e.preventDefault();
                 if (confirm(options.confirm_message || "确认执行")) {
-                    document.querySelector("form").submit();
+                    var form = document.querySelector("form");
+                    input = document.createElement("input");
+                    input.setAttribute("name", e.target.name);
+                    input.setAttribute("value", 'custom-btn');
+                    input.style.visibility = "hidden";
+                    form.appendChild(input);
+                    form.submit();
                 }
             }
         });
