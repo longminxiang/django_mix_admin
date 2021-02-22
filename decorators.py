@@ -48,7 +48,7 @@ def import_file_action(desc, accept=None, style=None):
     return decorator
 
 
-def short_description(desc, boolean=False):
+def short_description(desc, boolean=False, admin_order_field=None):
     '''
     short description装饰器
     \n@param desc 描述
@@ -57,6 +57,10 @@ def short_description(desc, boolean=False):
         func.short_description = desc
         if boolean:
             func.boolean = boolean
+        if admin_order_field:
+            func.admin_order_field = admin_order_field
+        if not hasattr(func, 'empty_value_display'):
+            func.empty_value_display = '-'
         return func
 
     return decorator
