@@ -110,6 +110,7 @@
       (function ($) {
         {% for field, width in min_width_fields %}
         $(".field-{{ field }}").css('white-space', 'unset');
+        $(".field-{{ field }}").css('word-break', 'break-all');
         $(".field-{{ field }}").css('min-width', '{{ width }}');
         {% endfor %}
         $(function () {
