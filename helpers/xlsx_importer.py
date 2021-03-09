@@ -50,7 +50,7 @@ class XlsxFormatter:
                 if idx != -1:
                     break
             self._key_index_map[k] = idx
-        if len([idx for idx in self._key_index_map.values() if idx != -1]) >= 3:
+        if len([idx for idx in self._key_index_map.values() if idx != -1]) >= min(3, len(self._key_map)):
             self._did_get_headers = True
         return False
 
@@ -63,6 +63,10 @@ class XlsxFormatter:
             setattr(hi, k, val)
             hi._values[k] = val
         return hi if getattr(hi, self._pk, None) else None
+
+    @property
+    def pk_val(self):
+        return self._values.get(self._pk)
 
 
 class XlsxImporter:
@@ -108,7 +112,7 @@ class XlsxImporter:
             format_val = formatter.format(vals)
             if format_val is None:
                 continue
-            self.message_prefix = '【{}】：'.format(format_val.name)
+            self.message_prefix = '【{}】：'.format(format_val.pk_val)
 
             try:
                 self._process(format_val)
