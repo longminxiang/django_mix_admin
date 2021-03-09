@@ -161,7 +161,10 @@ class LayDateTimeWidget(forms.widgets.DateTimeInput):
         super().__init__(attrs, format)
 
     def format_value(self, value):
-        value = to_current_timezone(value)
+        try:
+            value = to_current_timezone(value)
+        except Exception:
+            pass
         val = super().format_value(value)
         return val
 
