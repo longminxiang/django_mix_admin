@@ -68,6 +68,8 @@ def add_extra_app(func):
 def add_extra_url(url, name=None):
 
     def wrapper(func):
+        if hasattr(func, 'as_view'):
+            func = func.as_view()
         xurl = path(url, func, name=name)
         AdminSite.extra_urls.append(xurl)
         return func
