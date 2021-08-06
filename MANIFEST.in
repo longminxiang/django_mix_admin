@@ -1,4 +1,4 @@
 include README.md
 include LICENSE
-recursive-include mix_admin/static *
-recursive-include mix_admin/templates *
+recursive-include django_mix_admin/static *
+recursive-include django_mix_admin/templates *

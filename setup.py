@@ -1,5 +1,5 @@
 import setuptools
-from mix_admin import __version__ as version
+from django_mix_admin import __version__ as version
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
