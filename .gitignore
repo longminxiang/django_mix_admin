@@ -9,3 +9,5 @@ local_settings.py
 /logs/
 *.sqlite
 *.sqlite3
+/dist/
+/*.egg-info/

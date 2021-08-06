@@ -1,0 +1,4 @@
+include README.md
+include LICENSE
+recursive-include mix_admin/static *
+recursive-include mix_admin/templates *
